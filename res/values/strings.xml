@@ -1,0 +1,9 @@
+<resources>
+
+    <string name="extension_name">Uptime</string>
+    <string name="status">Last reboot — %1$s</string>
+    <string name="application_name">Dashclock Uptime Extension</string>
+    <string name="extension_info">Displays information about the uptime of your phone.</string>
+	<string name="message">Approximately %1$s</string>
+
+</resources>
