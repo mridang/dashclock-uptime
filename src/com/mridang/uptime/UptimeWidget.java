@@ -8,11 +8,7 @@ import java.util.Locale;
 
 import org.ocpsoft.prettytime.Duration;
 import org.ocpsoft.prettytime.PrettyTime;
-import org.ocpsoft.prettytime.TimeUnit;
-import org.ocpsoft.prettytime.units.Day;
 import org.ocpsoft.prettytime.units.JustNow;
-import org.ocpsoft.prettytime.units.Millisecond;
-import org.ocpsoft.prettytime.units.Second;
 
 import android.os.SystemClock;
 import android.util.Log;
@@ -61,13 +57,18 @@ public class UptimeWidget extends DashClockExtension {
 			    	lstDurations.remove(d);
 			    }
 			}
-			edtInformation.expandedBody(String.format(getString(R.string.message), pd.format(lstDurations)));
-			
-			SimpleDateFormat sdf = new SimpleDateFormat("dd MMMM, yyyy", Locale.getDefault());
-			Date datReboot = new Date(Calendar.getInstance().getTimeInMillis() - SystemClock.uptimeMillis());
-			edtInformation.status(String.format(getString(R.string.status), sdf.format(datReboot)));
 
-			edtInformation.visible(true);
+			if (!lstDurations.isEmpty()) {
+
+				edtInformation.expandedBody(String.format(getString(R.string.message), pd.format(lstDurations)));
+			
+				SimpleDateFormat sdf = new SimpleDateFormat("dd MMMM, yyyy", Locale.getDefault());
+				Date datReboot = new Date(Calendar.getInstance().getTimeInMillis() - SystemClock.uptimeMillis());
+				edtInformation.status(String.format(getString(R.string.status), sdf.format(datReboot)));
+
+				edtInformation.visible(true);
+				
+			}
 			
 		} catch (Exception e) {
 			Log.e("UptimeWidget", "Encountered an error", e);
