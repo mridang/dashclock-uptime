@@ -49,7 +49,7 @@ public class UptimeWidget extends DashClockExtension {
 
 		try {
 
-			PrettyTime pd = new PrettyTime(new Date(SystemClock.uptimeMillis()));
+			PrettyTime pd = new PrettyTime(new Date(SystemClock.elapsedRealtime()));
 
 			List<Duration> lstDurations = pd.calculatePreciseDuration(new Date(0));			
 			for (Duration d : lstDurations) {
@@ -63,7 +63,7 @@ public class UptimeWidget extends DashClockExtension {
 				edtInformation.expandedBody(String.format(getString(R.string.message), pd.format(lstDurations)));
 			
 				SimpleDateFormat sdf = new SimpleDateFormat("dd MMMM, yyyy", Locale.getDefault());
-				Date datReboot = new Date(Calendar.getInstance().getTimeInMillis() - SystemClock.uptimeMillis());
+				Date datReboot = new Date(Calendar.getInstance().getTimeInMillis() - SystemClock.elapsedRealtime());
 				edtInformation.status(String.format(getString(R.string.status), sdf.format(datReboot)));
 
 				edtInformation.visible(true);
