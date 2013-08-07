@@ -47,11 +47,9 @@ public class UptimeWidget extends DashClockExtension {
 	@Override
 	protected void onUpdateData(int arg0) {
 
-		setUpdateWhenScreenOn(true);
-
 		Log.d("UptimeWidget", "Calculating the phone's uptime");
 		ExtensionData edtInformation = new ExtensionData();
-		edtInformation.visible(false);
+		setUpdateWhenScreenOn(true);
 
 		try {
 
@@ -59,9 +57,13 @@ public class UptimeWidget extends DashClockExtension {
 
 			List<Duration> lstDurations = pd.calculatePreciseDuration(new Date(0));			
 			for (Duration d : lstDurations) {
+
 				if (d.getUnit() instanceof JustNow) {
+
 					lstDurations.remove(d);
+
 				}
+
 			}
 
 			if (!lstDurations.isEmpty()) {
@@ -111,6 +113,7 @@ public class UptimeWidget extends DashClockExtension {
 			}
 
 		} catch (Exception e) {
+			edtInformation.visible(false);
 			Log.e("UptimeWidget", "Encountered an error", e);
 			BugSenseHandler.sendException(e);
 		}
