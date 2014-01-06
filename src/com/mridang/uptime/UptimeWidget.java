@@ -12,9 +12,9 @@ import org.ocpsoft.prettytime.PrettyTime;
 import org.ocpsoft.prettytime.units.JustNow;
 
 import android.content.Intent;
-import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
+import android.content.pm.ResolveInfo;
 import android.net.Uri;
 import android.os.SystemClock;
 import android.util.Log;
@@ -35,7 +35,7 @@ public class UptimeWidget extends DashClockExtension {
 
 		super.onCreate();
 		Log.d("UptimeWidget", "Created");
-		BugSenseHandler.initAndStartSession(this, "727fcaa3");
+		BugSenseHandler.initAndStartSession(this, getString(R.string.bugsense));
 
 	}
 
@@ -89,10 +89,13 @@ public class UptimeWidget extends DashClockExtension {
 				} catch (NameNotFoundException e) {
 
 					Integer intExtensions = 0;
+				    Intent ittFilter = new Intent("com.google.android.apps.dashclock.Extension");
+				    String strPackage;
 
-					for (PackageInfo pkgPackage : mgrPackages.getInstalledPackages(0)) {
+				    for (ResolveInfo info : mgrPackages.queryIntentServices(ittFilter, 0)) {
 
-						intExtensions = intExtensions + (pkgPackage.applicationInfo.packageName.startsWith("com.mridang.") ? 1 : 0); 
+				    	strPackage = info.serviceInfo.applicationInfo.packageName;
+						intExtensions = intExtensions + (strPackage.startsWith("com.mridang.") ? 1 : 0); 
 
 					}
 
