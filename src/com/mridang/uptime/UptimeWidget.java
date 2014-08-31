@@ -7,11 +7,13 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Random;
 
+import org.acra.ACRA;
 import org.ocpsoft.prettytime.Duration;
 import org.ocpsoft.prettytime.PrettyTime;
 import org.ocpsoft.prettytime.units.JustNow;
 
 import android.content.Intent;
+import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.pm.ResolveInfo;
@@ -19,7 +21,6 @@ import android.net.Uri;
 import android.os.SystemClock;
 import android.util.Log;
 
-import com.bugsense.trace.BugSenseHandler;
 import com.google.android.apps.dashclock.api.DashClockExtension;
 import com.google.android.apps.dashclock.api.ExtensionData;
 
@@ -35,7 +36,7 @@ public class UptimeWidget extends DashClockExtension {
 
 		super.onCreate();
 		Log.d("UptimeWidget", "Created");
-		BugSenseHandler.initAndStartSession(this, getString(R.string.bugsense));
+		ACRA.init(new AcraApplication(getApplicationContext()));
 
 	}
 
@@ -45,7 +46,7 @@ public class UptimeWidget extends DashClockExtension {
 	 * (int)
 	 */
 	@Override
-	protected void onUpdateData(int arg0) {
+	protected void onUpdateData(int intReason) {
 
 		Log.d("UptimeWidget", "Calculating the phone's uptime");
 		ExtensionData edtInformation = new ExtensionData();
@@ -55,7 +56,7 @@ public class UptimeWidget extends DashClockExtension {
 
 			PrettyTime pd = new PrettyTime(new Date(SystemClock.elapsedRealtime()));
 
-			List<Duration> lstDurations = pd.calculatePreciseDuration(new Date(0));			
+			List<Duration> lstDurations = pd.calculatePreciseDuration(new Date(0));
 			for (Duration d : lstDurations) {
 
 				if (d.getUnit() instanceof JustNow) {
@@ -78,7 +79,7 @@ public class UptimeWidget extends DashClockExtension {
 
 			}
 
-			if (new Random().nextInt(5) == 0) {
+			if (new Random().nextInt(5) == 0 && !(0 != (getApplicationInfo().flags & ApplicationInfo.FLAG_DEBUGGABLE))) {
 
 				PackageManager mgrPackages = getApplicationContext().getPackageManager();
 
@@ -89,22 +90,26 @@ public class UptimeWidget extends DashClockExtension {
 				} catch (NameNotFoundException e) {
 
 					Integer intExtensions = 0;
-				    Intent ittFilter = new Intent("com.google.android.apps.dashclock.Extension");
-				    String strPackage;
+					Intent ittFilter = new Intent("com.google.android.apps.dashclock.Extension");
+					String strPackage;
 
-				    for (ResolveInfo info : mgrPackages.queryIntentServices(ittFilter, 0)) {
+					for (ResolveInfo info : mgrPackages.queryIntentServices(ittFilter, 0)) {
 
-				    	strPackage = info.serviceInfo.applicationInfo.packageName;
-						intExtensions = intExtensions + (strPackage.startsWith("com.mridang.") ? 1 : 0); 
+						strPackage = info.serviceInfo.applicationInfo.packageName;
+						intExtensions = intExtensions + (strPackage.startsWith("com.mridang.") ? 1 : 0);
 
 					}
 
 					if (intExtensions > 1) {
 
 						edtInformation.visible(true);
-						edtInformation.clickIntent(new Intent(Intent.ACTION_VIEW).setData(Uri.parse("market://details?id=com.mridang.donate")));
+						edtInformation.clickIntent(new Intent(Intent.ACTION_VIEW).setData(Uri
+								.parse("market://details?id=com.mridang.donate")));
 						edtInformation.expandedTitle("Please consider a one time purchase to unlock.");
-						edtInformation.expandedBody("Thank you for using " + intExtensions + " extensions of mine. Click this to make a one-time purchase or use just one extension to make this disappear.");
+						edtInformation
+								.expandedBody("Thank you for using "
+										+ intExtensions
+										+ " extensions of mine. Click this to make a one-time purchase or use just one extension to make this disappear.");
 						setUpdateWhenScreenOn(true);
 
 					}
@@ -118,7 +123,7 @@ public class UptimeWidget extends DashClockExtension {
 		} catch (Exception e) {
 			edtInformation.visible(false);
 			Log.e("UptimeWidget", "Encountered an error", e);
-			BugSenseHandler.sendException(e);
+			ACRA.getErrorReporter().handleSilentException(e);
 		}
 
 		edtInformation.icon(R.drawable.ic_dashclock);
@@ -134,7 +139,6 @@ public class UptimeWidget extends DashClockExtension {
 
 		super.onDestroy();
 		Log.d("UptimeWidget", "Destroyed");
-		BugSenseHandler.closeSession(this);
 
 	}
 
