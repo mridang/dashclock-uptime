@@ -1,15 +1,5 @@
 package com.mridang.uptime;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.List;
-import java.util.Locale;
-
-import org.acra.ACRA;
-import org.ocpsoft.prettytime.Duration;
-import org.ocpsoft.prettytime.PrettyTime;
-import org.ocpsoft.prettytime.units.JustNow;
-
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -18,6 +8,16 @@ import android.provider.Settings;
 import android.util.Log;
 
 import com.google.android.apps.dashclock.api.ExtensionData;
+
+import org.acra.ACRA;
+import org.ocpsoft.prettytime.Duration;
+import org.ocpsoft.prettytime.PrettyTime;
+import org.ocpsoft.prettytime.units.JustNow;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
+import java.util.Locale;
 
 /*
  * This class is the main class that provides the widget
@@ -82,7 +82,7 @@ public class UptimeWidget extends ImprovedExtension {
 
 				edtInformation.clickIntent(new Intent(Settings.ACTION_DEVICE_INFO_SETTINGS));
 				edtInformation.expandedBody(getString(R.string.message, pd.format(lstDurations)));
-				edtInformation.status(getString(R.string.status, sdf.format(datReboot)));
+				edtInformation.expandedTitle(getString(R.string.status, sdf.format(datReboot)));
 				edtInformation.status(getString(R.string.status, sdf.format(datReboot)));
 				edtInformation.visible(true);
 
