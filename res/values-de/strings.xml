@@ -1,0 +1,12 @@
+<resources>
+
+    <!--
+        These strings can be taken from the main file (res/values/strings.xml)
+        <string name="extension_name">Uptime</string>
+        <string name="application_name">Dashclock Uptime Extension</string>
+    -->
+    <string name="status">Gestartet am %1$s</string>
+    <string name="extension_info">Diese Erweiterung zeigt dir die Betriebszeit seit dem letzten Start an.</string>
+    <string name="message">Ungefähr %1$s</string>
+
+</resources>
